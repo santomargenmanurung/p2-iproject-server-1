@@ -20,7 +20,7 @@ router.post(
   AdminController.addEvent
 );
 router.patch("/events/:id", AdminController.updateStatusEvent);
-router.patch("/tikets/:tiketId", AdminController.updateStatusTiket);
+router.patch("/tikets/:ticketId", AdminController.updateStatusTiket);
 router.delete("/events/:id", AdminController.deleteEvent);
 
 module.exports = router;

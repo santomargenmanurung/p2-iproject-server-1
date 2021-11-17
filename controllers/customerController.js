@@ -1,7 +1,9 @@
 const midtransClient = require("midtrans-client");
 const { comparePassword } = require("../helpers/bcrypt");
 const { generateToken } = require("../helpers/jwt");
-const { User, Event, Tiket } = require("../models");
+const generatePassword = require("password-generator");
+const sendEmail = require("../helpers/nodemailer");
+const { User, Event, Ticket, MyTicket } = require("../models");
 
 class CutomerController {
   static async registerCustomer(req, res, next) {
@@ -15,6 +17,9 @@ class CutomerController {
         password: password,
       };
       const newUser = await User.create(payload);
+      const content = `Hi ${newUser.name}!, your account with email ${newUser.email} successfully registered.`;
+      const subject = `Information Registered`;
+      sendEmail(newUser, content, subject);
       res.status(201).json({
         id: newUser.id,
         username: newUser.username,
@@ -50,6 +55,62 @@ class CutomerController {
       res.status(200).json({ accesss_token: token });
     } catch (err) {
       console.log(err);
+      next(err);
+    }
+  }
+
+  static async loginGoogle(req, res, next) {
+    try {
+      const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+      const { id_token } = req.body;
+
+      const ticket = await client.verifyIdToken({
+        idToken: id_token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      const emailGoogle = payload.email;
+      const nameGoogle = payload.name;
+      const password = "password".toString(64) + "!@152";
+
+      const [user, created] = await User.findOrCreate({
+        where: { email: emailGoogle },
+        defaults: {
+          name: nameGoogle,
+          username: nameGoogle,
+          email: emailGoogle,
+          password: password + "!@152",
+          no_identity: `C-${generatePassword(8)}}`,
+        },
+      });
+      const content = `Hi ${nameGoogle}!,your account with email ${emailGoogle} successfully registered.`;
+      const subject = `Information Registrasion`;
+      sendEmail(payload, content, subject);
+
+      const tokenPayload = {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        username: user.username,
+      };
+
+      const token = createToken(tokenPayload);
+      if (created) {
+        res.status(201).json({
+          access_token: token,
+          id: user.id,
+          role: user.role,
+          username: user.username,
+        });
+      } else {
+        res.status(200).json({
+          access_token: token,
+          id: user.id,
+          role: user.role,
+          username: user.username,
+        });
+      }
+    } catch (err) {
       next(err);
     }
   }
@@ -96,31 +157,99 @@ class CutomerController {
       next(err);
     }
   }
-  static async getAllTiket(req, res, next) {
+  static async getAllTciket(req, res, next) {
     try {
-      const allTiket = await Tiket.findAll({
+      const allTciket = await Ticket.findAll({
         attributes: { exclude: ["createdAt", "updatedAt"] },
       });
-      res.status(200).json(allTiket);
+      res.status(200).json(allTciket);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async myTicket(req, res, next) {
+    try {
+      const allMyTicket = await MyTicket.findAll({
+        where: { UserId: req.user.id },
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: {
+          model: Ticket,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+          include: {
+            model: Event,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+        },
+      });
+      res.status(200).json(allMyTicket);
     } catch (err) {
       next(err);
     }
   }
 
-  static async paymentTiket(req, res, next) {
+  static async addTicket(req, res, next) {
     try {
+      const id = Number(req.params.ticketId);
+      const { id: UserId } = req.user;
+      if (!id) {
+        throw { name: "TICKET_NOT_FOUND" };
+      }
+      const foundTicket = await Ticket.findByPk(id);
+      if (!foundTicket) {
+        throw { name: "TICKET_NOT_FOUND" };
+      }
+      const myTicket = await MyTicket.create({
+        TicketId: id,
+        UserId: UserId,
+      });
+      res.status(201).json({
+        id: myTicket.id,
+        TicketId: myTicket.TicketId,
+        UserId: myTicket.UserId,
+      });
     } catch (err) {
       next(err);
     }
   }
-  static async detailMyTikets(req, res, next) {
+
+  static async paymentTicket(req, res, next) {
     try {
-      const id = Number(req.params.ticketId);
-      const detailMyTicket = await Tiket.findOne({
+      let snap = new midtransClient.Snap({
+        isProduction: false,
+        serverKey: process.env.MIDTRANS_SERVER_KEY,
+        clientKey: process.env.MIDTRANS_CLIENT_KEY,
+      });
+
+      let parameter = {
+        transaction_details: {
+          order_id: generatePassword(8),
+          gross_amount: 200000,
+        },
+        credit_card: {
+          secure: true,
+        },
+      };
+      let transaction = await snap.createTransaction(parameter);
+      const content = `Hi ${req.user.name}!, please click the link ${transaction.redirect_url} to continue the payment `;
+      const subject = `Information Payment`;
+      sendEmail(req.user, content, subject);
+      res.status(200).json({ transaction });
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async detailMyTickets(req, res, next) {
+    try {
+      const id = Number(req.params.MyTicketId);
+      const detailMyTicket = await MyTicket.findOne({
         attributes: { exclude: ["createdAt", "updatedAt"] },
         include: {
-          model: Event,
+          model: Ticket,
           attributes: { exclude: ["createdAt", "updatedAt"] },
+          include: {
+            model: Event,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
         },
       });
       res.status(200).json(detailMyTicket);

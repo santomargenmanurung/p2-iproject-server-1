@@ -1,45 +1,38 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Tiket extends Model {
+  class MyTicket extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Tiket.belongsTo(models.Event, { foreignKey: "EventId" });
-      Tiket.belongsTo(models.User, { foreignKey: "UserId" });
+      MyTicket.belongsTo(models.User, { foreignKey: "UserId" });
+      MyTicket.belongsTo(models.Ticket, { foreignKey: "TicketId" });
     }
   }
-  Tiket.init(
+  MyTicket.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+      TicketId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       UserId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        validate: {
-          notNull: {
-            msg: "UserId is required",
-          },
-        },
-      },
-      EventId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: "UserId is required",
-          },
-        },
-      },
-      status: {
-        type: DataTypes.STRING,
       },
     },
     {
       sequelize,
-      modelName: "Tiket",
+      modelName: "MyTicket",
     }
   );
-  return Tiket;
+  return MyTicket;
 };

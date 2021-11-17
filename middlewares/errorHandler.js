@@ -32,6 +32,7 @@ const errorHandler = (err, req, res, next) => {
       res.status(404).json({ message: "Event Not Found" });
       break;
     case "TIKET_NOT_FOUND":
+    case "TICKET_NOT_FOUND":
       res.status(404).json({ message: "Tiket Not Found" });
       break;
     case "CANT_DELETE":

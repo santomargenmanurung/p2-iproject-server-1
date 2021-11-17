@@ -7,8 +7,10 @@ router.post("/login", CutomerController.loginCustomer);
 router.get("/events", CutomerController.getAllEvent);
 router.get("/events/:eventId", CutomerController.detailEvent);
 router.use(authentication);
-router.get("/tickets", CutomerController.getAllTiket);
-router.post("/tickets/:ticketId", CutomerController.paymentTiket);
-router.get("/myTicket/:ticketId", CutomerController.detailMyTikets);
+router.get("/myTicket", CutomerController.myTicket);
+router.post("/ticket/:ticketId", CutomerController.addTicket);
+router.get("/tickets", CutomerController.getAllTciket);
+router.get("/payment", CutomerController.paymentTicket);
+router.get("/myTicket/:MyTicketId", CutomerController.detailMyTickets);
 
 module.exports = router;

@@ -2,7 +2,7 @@ const { comparePassword } = require("../helpers/bcrypt");
 const { generateToken } = require("../helpers/jwt");
 const { getPagination, pagingData } = require("../helpers/mekanismPagination");
 const { Op } = require("sequelize");
-const { User, Event, Tiket } = require("../models");
+const { User, Event, Ticket } = require("../models");
 
 class AdminController {
   static async registerAdmin(req, res, next) {
@@ -115,8 +115,7 @@ class AdminController {
       const EventId = newEvent.id;
 
       if (newEvent) {
-        await Tiket.create({
-          UserId,
+        await Ticket.create({
           EventId,
         });
       }
@@ -165,18 +164,18 @@ class AdminController {
 
   static async updateStatusTiket(req, res, next) {
     try {
-      const id = Number(req.params.tiketId);
+      const id = Number(req.params.ticketId);
       const { status } = req.body;
 
       if (!id) {
         throw { name: "TIKET_NOT_FOUND" };
       }
-      const foundTiket = await Tiket.findByPk(id);
+      const foundTiket = await Ticket.findByPk(id);
 
       if (!foundTiket) {
         throw { name: "TIKET_NOT_FOUND" };
       }
-      const update = await Tiket.update(
+      await Ticket.update(
         {
           status,
         },
@@ -195,10 +194,15 @@ class AdminController {
     try {
       const id = Number(req.params.id);
       const foundEvent = await Event.findByPk(id);
-      // console.log(foundEvent);
-      if (!id || !foundEvent) {
+      console.log(foundEvent.status);
+
+      if (!id) {
         throw { name: "EVENT_NOT_FOUND" };
       }
+      if (!foundEvent) {
+        throw { name: "EVENT_NOT_FOUND" };
+      }
+
       if (foundEvent.status !== "done") {
         throw { name: "CANT_DELETE" };
       }
