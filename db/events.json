@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Tour Musik Taylor Swift",
+    "date": "17/Desember/2021",
+    "held_In": "Jakarta",
+    "capacity": 1500,
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/b/b3/Taylor_Swift%27s_Reputation_Stadium_tour.png",
+    "description": "A concert tour (or simply tour) is a series of concerts by an artist or group of artists in different cities, countries or locations. Often concert tours are named to differentiate different tours by the same artist and to associate a specific tour with a particular album or product. Especially in the popular music world, such tours can become large-scale enterprises that last for several months or even years, are seen by hundreds of thousands or millions of people, and bring in millions of dollars in ticket revenues. A performer who embarks on a concert tour is called a touring artist."
+  },
+  {
+    "title": "Biennale Chiancino",
+    "date": "12/Desember/2021",
+    "held_In": "Jakarta",
+    "capacity": 300,
+    "posterUrl": "https://madiunkota.go.id/wp-content/uploads/2021/04/pameran.jpg",
+    "description": "The selection of 100 artists participating in the Biennale is made on applications from contemporary artists from all over the world. The selection process is rigorous and allows critics and collectors to admire works of excellent quality both in the Art Museum and in the Clancianum Galleries, where contemporary art creates a magnificent contrast with the historic architecture of the medieval town."
+  },
+  {
+    "title": "Theater Show",
+    "date": "15/Desember/2021",
+    "held_In": "Jakarta",
+    "capacity": 250,
+    "posterUrl": "https://www.courant.com/resizer/2PprsCAWvRGJsxt40MszRF5Iqgg=/1200x0/top/arc-anglerfish-arc2-prod-tronc.s3.amazonaws.com/public/ECTEJ24ZXFDQNKNQATKDYTYXXU.jpg",
+    "description": "Collaboration among so many types of personnel presupposes a system that divides duties. In the commercial theatre the most powerful person is usually the producer, who is responsible for acquiring the investment that finances the production. The rehearsal of the play is conducted by the director, who is responsible for interpreting the script, for casting, and for helping to determine the design of the scenery and costumes. Under the director’s general direction, a stage manager, possibly with several assistants, looks after the organization of rehearsal and the technical elements of the performance—light and curtain cues, properties, sound effects, and so on."
+  },
+  {
+    "title": "Festival Music indie 2021",
+    "date": "8/Desember/2021",
+    "held_In": "Jakarta",
+    "capacity": 1000,
+    "posterUrl": "https://cdn.idntimes.com/content-images/post/20201028/poster-here-comes-the-sun-virtual-1-1d95e5140740f27955cc3d4dae055a62_600x400.jpg",
+    "description": "Music festivals have come a long way since the psychedelic wig-outs of the '60s. These days, there's a festival for everyone, even if you've shunned most annual mud-fests in the past because you dance to disco and you don't like rock. Beyond the traditional  Asia festivals, there are fantastic international events from California's very Instagram-friendly Coachella to Japan's fabulous Fuji Rock, which prides itself on being the 'cleanest festival in the world'. Here are the 50 best music festivals to try before you die."
+  }
+]

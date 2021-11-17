@@ -1,0 +1,35 @@
+{
+  "name": "p2-iproject-server-1",
+  "version": "1.0.0",
+  "description": "Individual Project - Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/santomargenmanurung/p2-iproject-server-1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/santomargenmanurung/p2-iproject-server-1/issues"
+  },
+  "homepage": "https://github.com/santomargenmanurung/p2-iproject-server-1#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "midtrans-client": "^1.2.5",
+    "nodemailer": "^6.7.1",
+    "pg": "^8.7.1",
+    "sequelize": "^6.9.0"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.3.0"
+  }
+}
