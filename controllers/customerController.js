@@ -1,3 +1,4 @@
+const midtransClient = require("midtrans-client");
 const { comparePassword } = require("../helpers/bcrypt");
 const { generateToken } = require("../helpers/jwt");
 const { User, Event, Tiket } = require("../models");
@@ -46,14 +47,35 @@ class CutomerController {
       };
 
       const token = generateToken(payload);
-      res.status(200).json({ access_token: token });
+      res.status(200).json({ accesss_token: token });
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
 
   static async getAllEvent(req, res, next) {
     try {
+      const { page, size, title } = req.query;
+      const { limit, offset } = getPagination(page, size);
+      let option = {
+        where: {
+          status: "avaliable",
+        },
+        limit,
+        offset,
+      };
+      if (title) {
+        option.where["title"] = {
+          [Op.iLike]: `%${title}%`,
+        };
+      }
+      const allEvent = await Event.findAndCountAll(option);
+      const eventData = pagingData(allEvent, page, limit);
+      if (eventData.totalItems === 0) {
+        throw { name: "EVENT_NOT_FOUND" };
+      }
+      res.status(200).json(eventData);
     } catch (err) {
       next(err);
     }
@@ -61,6 +83,25 @@ class CutomerController {
 
   static async detailEvent(req, res, next) {
     try {
+      const eventId = Number(req.params.eventId);
+      if (!eventId) {
+        throw { name: "EVENT_NOT_FOUND" };
+      }
+      const event = await Event.findOne({
+        where: { id: eventId },
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      });
+      res.status(200).json(event);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async getAllTiket(req, res, next) {
+    try {
+      const allTiket = await Tiket.findAll({
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      });
+      res.status(200).json(allTiket);
     } catch (err) {
       next(err);
     }
@@ -68,6 +109,21 @@ class CutomerController {
 
   static async paymentTiket(req, res, next) {
     try {
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async detailMyTikets(req, res, next) {
+    try {
+      const id = Number(req.params.ticketId);
+      const detailMyTicket = await Tiket.findOne({
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: {
+          model: Event,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      });
+      res.status(200).json(detailMyTicket);
     } catch (err) {
       next(err);
     }

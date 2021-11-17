@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
 
-const SECRET_KEY = "inisangatlahaman";
+const secret = process.env.SECRET_KEY;
 
 const generateToken = (payload) => {
-  return jwt.sign(payload, SECRET_KEY);
+  return jwt.sign(payload, secret);
 };
 
 const verifyToken = (token) => {
-  return jwt.verify(token, SECRET_KEY);
+  return jwt.verify(token, secret);
 };
 
 module.exports = {
