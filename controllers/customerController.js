@@ -2,6 +2,8 @@ const midtransClient = require("midtrans-client");
 const { comparePassword } = require("../helpers/bcrypt");
 const { generateToken } = require("../helpers/jwt");
 const generatePassword = require("password-generator");
+const { getPagination, pagingData } = require("../helpers/mekanismPagination");
+
 const sendEmail = require("../helpers/nodemailer");
 const { User, Event, Ticket, MyTicket } = require("../models");
 
@@ -52,7 +54,9 @@ class CutomerController {
       };
 
       const token = generateToken(payload);
-      res.status(200).json({ accesss_token: token });
+      res
+        .status(200)
+        .json({ access_token: token, no_Identity: foundUser.no_Identity });
     } catch (err) {
       console.log(err);
       next(err);
@@ -138,6 +142,7 @@ class CutomerController {
       }
       res.status(200).json(eventData);
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
@@ -161,6 +166,10 @@ class CutomerController {
     try {
       const allTciket = await Ticket.findAll({
         attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: {
+          model: Event,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
       });
       res.status(200).json(allTciket);
     } catch (err) {
